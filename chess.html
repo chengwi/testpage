@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>五子棋游戏</title>
+</head>
+<style>
+    #canvas {
+        display: block;
+        margin: 0 auto;
+        box-shadow: 2px 2px 5px #B9B9B9, 2px 2px 5px #eaeaea;
+        background: #f1c450;
+    }
+
+</style>
+<body>
+<canvas width="450" height="450" id="canvas"></canvas>
+</body>
+<script>
+    //获取id拿到dom
+    var chess = document.getElementById("canvas");
+    //获取上下文
+    context = chess.getContext("2d");
+    //画棋盘
+    context.strokeStyle = "#B1B1B1";
+    var me = true;
+    //建立二维数组存储数据
+    var chessBroad = [];
+    //建立三维数组计算胜利算法
+    var winds = [];
+    //统计数组
+    var over = false;
+    var mywin = [];
+    var itwin = [];
+
+    for (var i = 0; i < 15; i++) {
+        chessBroad[i] = [];
+        for (var j = 0; j < 15; j++) {
+            chessBroad[i][j] = [];
+        }
+    }
+    var count = 0;
+    for (var i = 0; i < 15; i++) {
+        winds[i] = [];
+        for (var j = 0; j < 15; j++) {
+            winds[i][j] = [];
+        }
+    }
+    //heng
+    for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                winds[i][j + k][count] = true;
+            }
+            count++;
+        }
+    }
+    //shu
+    for (var i = 0; i < 15; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                winds[j + k][i][count] = true;
+            }
+            count++;
+        }
+    }
+    //xie
+    for (var i = 0; i < 11; i++) {
+        for (var j = 0; j < 11; j++) {
+            for (var k = 0; k < 5; k++) {
+                winds[i + k][j + k][count] = true;
+            }
+            count++;
+        }
+    }
+    //xiefan
+    for (var i = 0; i < 11; i++) {
+        for (var j = 14; j > 3; j--) {
+            for (var k = 0; k < 5; k++) {
+                winds[i + k][j - k][count] = true;
+            }
+            count++;
+        }
+    }
+
+    for (var i = 0; i < count; i++) {
+        mywin[i] = 0;
+        itwin[i] = 0;
+    }
+
+
+    var logo = new Image();
+    logo.src = "login_bg.jpg";
+    logo.onload = function () {
+        drawchess();
+    }
+
+    chess.onclick = function (e) {
+        if (over) {
+            return;
+        }
+        if (!me) {
+            return;
+        }
+        var offx = e.offsetX;
+        var offy = e.offsetY;
+        var i = Math.floor(offx / 30);
+        var j = Math.floor(offy / 30);
+        if (chessBroad[i][j] == 0) {
+            step(i, j, me);
+            chessBroad[i][j] = 1;
+        }
+        for (var k = 0; k < count; k++) {
+            if (winds[i][j][k]) {
+                mywin[k]++;
+                itwin[k] = 6;
+                if (mywin[k] == 5) {
+                    over = true;
+                    alert("你赢了")
+                }
+            }
+        }
+        if (!over) {
+            me = !me
+            computerAI()
+        }
+    }
+    var computerAI = function () {
+        var myascore = [];
+        var computerStore = [];
+        var max = 0;
+        var u = 0;
+        var v = 0;
+
+        for (var i = 0; i < 15; i++) {
+            myascore[i] = [];
+            computerStore[i] = [];
+            for (var j = 0; j < 15; j++) {
+                myascore[i][j] = 0;
+                computerStore[i][j] = 0;
+            }
+        }
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                if (chessBroad[i][j] == 0) {
+                    //当前位置没有落子
+                    //便利所有赢法数组
+                    for (var k = 0; k < count; k++) {
+                        if (winds[i][j][k]) {
+                            if (mywin[k] == 1) {
+                                myascore[i][j] += 200
+                            } else if (mywin[k] == 2) {
+                                myascore[i][j] += 400
+                            } else if (mywin[k] == 3) {
+                                myascore[i][j] += 2000
+                            } else if (mywin[k] == 4) {
+                                myascore[i][j] += 10000
+                            }
+                            if (itwin[k] == 1) {
+                                computerStore[i][j] += 220
+                            } else if (itwin[k] == 2) {
+                                computerStore[i][j] += 420
+                            } else if (itwin[k] == 3) {
+                                computerStore[i][j] += 2100
+                            } else if (itwin[k] == 4) {
+                                computerStore[i][j] += 20000
+                            }
+                        }
+                    }
+                    if (myascore[i][j] > max) {
+                        max = myascore[i][j];
+                        u = i;
+                        v = j;
+                    } else if (myascore[i][j] == max) {
+                        if (computerStore[i][j] > computerStore[u][v]) {
+                            u = i;
+                            v = j;
+                        }
+                    }
+                    if (computerStore[i][j] > max) {
+                        max = computerStore[i][j];
+                        u = i;
+                        v = j;
+                    } else if (computerStore[i][j] == max) {
+                        if (myascore[i][j] > myascore[u][v]) {
+                            u = i;
+                            v = j;
+                        }
+                    }
+                }
+            }
+        }
+        step(u, v, false)
+        chessBroad[u][v] = 2;
+        for (var k = 0; k < count; k++) {
+            if (winds[u][v][k]) {
+                itwin[k]++;
+                mywin[k] = 6;
+                if (itwin[k] == 5) {
+                    over = true;
+                    alert("计算机赢了")
+                }
+            }
+        }
+        if (!over) {
+            me = !me
+        }
+    }
+    function step(i, j, me) {
+        context.beginPath();
+        context.arc(15 + i * 30, 15 + j * 30, 13, 0, 2 * Math.PI)
+        context.closePath();
+        var gradient = context.createRadialGradient(15 + i * 30 + 2, 15 + i * 30 + 2, 13, 15 + i * 30 + 2, 15 + i * 30 + 2, 0);
+        if (me) {
+            gradient.addColorStop(0, "#0A0A0A");
+            gradient.addColorStop(1, "#636766");
+        } else {
+            gradient.addColorStop(1, "#D1D1D1");
+            gradient.addColorStop(0, "#F9F9F9");
+        }
+        context.fillStyle = gradient;
+        context.fill();
+    }
+
+    function drawchess() {
+        for (var i = 0; i < 15; i++) {
+            context.moveTo(15 + i * 30, 15);
+            context.lineTo(15 + i * 30, 435);
+            context.stroke();
+            context.moveTo(15, 15 + i * 30);
+            context.lineTo(435, 15 + i * 30);
+            context.stroke();
+        }
+    }
+</script>
+</html>
