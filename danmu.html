@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style type="text/css">
+    .video{
+        width:1024px;
+        height: 480px;
+        border:1px solid #eaeaea;
+        margin:0 auto;
+        background: url(login_bg.jpg);
+        background-size:100% 100%;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    .wrap{
+        width:100%;
+        background: rgba(7,17,27,.7);
+
+    }
+    .inp{
+        position: absolute;
+        left:0;
+        right:0;
+        bottom: 30px;
+        height: 32px;
+        width: 400px;
+        margin: auto;
+    }
+    .inp input{
+        position: absolute;
+        left:0;
+        top:0;
+        height: 30px;
+        outline: none;
+        border:none;
+        width: 350px;
+        line-height: 32px;
+        text-indent: 20px;
+        font-size: 16px;
+
+    }
+    .btn{
+        position: absolute;
+        right:0;
+        top:0;
+        display:block;
+        line-height: 32px;
+        text-align: center;
+        font-size: 16px;
+        color:#fff;
+        background:#03AF8B ;
+        height: 32px;
+        width: 50px;
+        cursor: pointer;
+    }
+    .piao{
+        position: absolute;
+        display: inline-block;
+        line-height: 24px;
+        right:0;
+        height: 24px;
+        font-size: 18px;
+    }
+    .donghua {
+        animation: my 10s linear ;
+        animation-fill-mode: forwards;
+    }
+    @keyframes my {
+
+    0%{
+    transform: translateX(0);
+    }
+        100%{
+            transform: translateX(-1024px);
+        }
+    }
+</style>
+
+<body>
+<div class="wrap">
+    <div class="video">
+        <div class="inp">
+            <input type="text" class="text">
+            <span class="btn">提交</span>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    var colors=["#FFB6C1","#FFC0CB","#DC143C","#FFF0F5","#C71585","#FF00FF","#00008B","#B0C4DE","#4682B4","#111111"]
+   function random(min, max){
+        var val = Math.random()*(max-min)+min
+        return Math.floor(val)
+    }
+
+   var video =document.getElementsByClassName('video')[0];
+   var text = document.getElementsByClassName('text')[0];
+    var btn = document.getElementsByClassName('btn')[0];
+    btn.onclick=function(){
+      var htmlStr = document.createElement('span');
+        htmlStr.setAttribute('class','piao donghua');
+        var i =random(0, 10);
+        var t =Math.floor(random(0, 100)*4.5);
+        htmlStr.style.color=colors[i];
+        htmlStr.style.top=t+'px';
+        htmlStr.innerHTML=text.value;
+        video.appendChild(htmlStr);
+        setTimeout(function(){
+            htmlStr.remove()
+        },9500)
+    }
+
+</script>
+
+
+
+</html>
