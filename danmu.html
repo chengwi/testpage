@@ -102,7 +102,7 @@
    var text = document.getElementsByClassName('text')[0];
     var btn = document.getElementsByClassName('btn')[0];
 
-    btn.onkeydown = function(event){
+    text.onkeydown = function(event){
         var e=event||window.event||arguments.callee.caller.arguments[0];
         if(e&&e.keyCode==13){
             btn.onclick()
