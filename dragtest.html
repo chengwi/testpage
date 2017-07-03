@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+
+    .dragwrap {
+        width: 420px;
+        height: 380px;
+        box-shadow: 0 0 5px #eaeaea;
+        position: absolute;
+        left: 400px;
+        top: 200px;
+        line-height: 380px;
+        text-align: center;
+        background: #00b43c;
+        color: #ffffff;
+        cursor: pointer;
+    }
+</style>
+<body>
+<div class="dragwrap">
+拖动我
+
+</div>
+</body>
+<script>
+    var bool = true;
+    document.onmousedown = function (e) {
+        bool = true;
+        var div = document.getElementsByClassName('dragwrap')[0];
+        //点击事件的值
+        e = event || window.event;
+        var pox = e.clientX - div.offsetLeft;
+        var poy = e.clientY - div.offsetTop;
+        document.onmousemove = function (event) {
+            if (bool) {
+                //移动事件的值
+                event = event || window.event;
+                fmove(event, pox, poy)
+            }
+        }
+
+    }
+    document.onmouseup = function () {
+        bool = false;
+    }
+    function fmove(e, posx, posy) {
+        var div = document.getElementsByClassName('dragwrap')[0];
+        l = e.clientX - posx;
+        t = e.clientY - posy;
+        var winWidth=document.documentElement.clientWidth||document.body.clientWidth;
+        var winHeight= document.documentElement.clientHeight||document.body.clientHeight;
+        var maxw = winWidth-div.offsetWidth;
+        var maxh = winHeight-div.offsetHeight-10;
+        if(maxw<l){
+            l = maxw;
+        }else if(l<0){
+            l=0;
+        }
+        if(maxh<t){
+            t = maxh;
+        }else if(t<0){
+            t=0;
+        }
+        div.style.left = l + "px";
+        div.style.top = t + "px";
+    }
+
+
+</script>
+</html>
