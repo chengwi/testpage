@@ -254,7 +254,7 @@
       <p> <span class="kuai" onclick="doit()">好的呀</span></p>
   </div>
   <div class="page page4" id="pagefour"></div>
-  <audio src="./Beautiful.mp3" autoplay="true"
+  <audio src="./Beautiful.mp3" id="aotoplay"
   type="audio/mpeg"></audio>
 </body>
 <script>
@@ -263,11 +263,15 @@
     ];
     var pagetwo =  document.getElementById("pagetwo");
     var pagethree =  document.getElementById("pagethree");
-
+    var aotoplay =  document.getElementById("aotoplay");
     var boxContent=document.getElementById("pageone");
     var i =0;
     var h=window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
 console.log(h)
+
+    document.addEventListener('touchstart',function () {
+        aotoplay.play();
+    })
     var timer =  setInterval(function(){
          if(i>=textList.length){
              clearInterval(timer);
