@@ -345,7 +345,10 @@ console.log(h)
     ring.addEventListener('transitionend',function(){
         setTimeout(function(){
                pagethree.style.display='block';
-            pagethree.style.transform='translateX(0)';
+            setTimeout(function(){
+             pagethree.style.transform='translateX(0)';
+            },100)；
+           
         },2000)
     })
 function remove(ele){
